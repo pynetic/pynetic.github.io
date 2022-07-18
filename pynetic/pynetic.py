@@ -15,7 +15,7 @@ class Component:
         tag = self.tag
         children_str = ""
         for child in self.children:
-            children_str += str(child)
+            children_str += str(child).replace("\n", "<br>")
         return f"<{tag}{self.extra}>{children_str}</{tag}>"
 
     def __repr__(self):
