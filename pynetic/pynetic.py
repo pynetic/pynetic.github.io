@@ -15,7 +15,7 @@ class Component:
         tag = self.tag
         children_str = ""
         for child in self.children:
-            children_str += str(child).replace("\n", "<br>")
+            children_str += str(child)
         return f"<{tag}{self.extra}>{children_str}</{tag}>"
 
     def __repr__(self):
@@ -27,14 +27,21 @@ class Page(Component):
         self.title = title
         self.tag = "html"
         self.body = []
-        self.children = [f"\n\t<head>\n\t\t<title>{title}</title>\n\t\t<script src=\"https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js\"></script>\n\t</head>\n\t<body>", """<script src="/pynetic.js"></script>"""]
+        self.children = [f"\n\t<head>\n\t\t<title>{title}</title>\n\t\t<link href='/pynetic.css' rel='stylesheet'>\n\t\t<script src=\"https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js\"></script>\n\t</head>\n\t<body>", """<script src="/pynetic.js"></script>"""]
 
     def render(self):
         body = ""
+        i = 0
         for child in self.body:
-            body += "\n\t\t"+str(child)
+            body += "\n\t\t"+(str(child).replace("\n", "<br>"))
         self.children.append(body+"\n\t</body>\n")
-        return "<!DOCTYPE HTML>\n"+super().render()
+        for key,value in self.tags.items():
+            self.extra += f" {key}=\"{value}\""
+        tag = self.tag
+        children_str = ""
+        for child in self.children:
+            children_str += str(child)
+        return "<!DOCTYPE HTML>\n"+f"<{tag}{self.extra}>{children_str}</{tag}>"
 
     def add(self, child):
         self.body.append(child)
